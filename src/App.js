@@ -47,7 +47,14 @@ export default function App() {
     setBallots(genBallots());
   };
   return (
-    <div className="container is-fluid">
+    <div className="container is-fluid mt-5">
+      <a href="https://forms.gle/4m8ih2JKVVZCKtq96" target="_blank" className="button is-info is-pulled-right">
+        <span className="icon-text">
+          <span className="icon mr-1">👍</span>
+          Give me feedback
+          <span className="icon ml-1">👎</span>
+        </span>
+      </a>
       <h1 className="title">Ranked Choice Voting</h1>
       <div className="content">
         Experiment with this simulator to better understand Ranked Choice Voting
