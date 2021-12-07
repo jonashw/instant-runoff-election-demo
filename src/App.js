@@ -169,10 +169,10 @@ export default function App() {
         )}
       </div>
 
-      <hr/>
 
       {!!result && (
         <>
+          <hr/>
           <ResultMessage result={result} />
 
           <div className="tabs is-toggle">
