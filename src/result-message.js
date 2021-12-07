@@ -1,29 +1,21 @@
 import Candidate from "./candidate";
-const ResultMessage = ({ results }) => {
-  var finalResult = results[results.length - 1];
-  if (!finalResult) {
-    return <></>;
-  }
-  var finalLeader = finalResult.leaders[0];
-  if (!finalLeader) {
-    return <></>;
-  }
-  var decided = finalLeader.votePercentage > 50;
+const ResultMessage = ({ result }) => {
   var runoff_intro = (
     <>
-      After <strong>{results.length - 1}</strong> instant run-off
-      {results.length - 1 === 1 ? "" : "s"}
+      After <strong>{result.stages.length - 1}</strong> instant run-off
+      {result.stages.length - 1 === 1 ? "" : "s"}
     </>
   );
-  return decided ? (
+  return !!result.winner ? (
     <article className="message is-success">
       <div className="message-header">
         <p>We have a winner!</p>
       </div>
       <div className="message-body">
-        {runoff_intro}, this election goes to {Candidate(finalLeader.candidate)}
-        with {finalLeader.voteCount} votes (
-        {finalLeader.votePercentage.toFixed(2)}% of all votes)
+        {runoff_intro}, this election goes to {Candidate(result.winner.candidate)}
+        with {result.winner.voteCount} votes (
+        {result.winner.votePercentage.toFixed(2)}% of all votes).
+        {result.winner.fromBehind && <strong className="ml-2">This candidate came from behind!</strong>}
       </div>
     </article>
   ) : (
@@ -32,7 +24,7 @@ const ResultMessage = ({ results }) => {
         <p>Undecided</p>
       </div>
       <div className="message-body">
-        {runoff_intro}, this election is undecided. Nobody got >50% of the vote!
+        {runoff_intro}, this election is undecided. Nobody got &gt;50% of the vote!
       </div>
     </article>
   );

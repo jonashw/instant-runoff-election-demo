@@ -42,7 +42,7 @@ var performInstantRunoff = (ballots, maxRunOffs) => {
     };
   };
 
-  var runOffs = [
+  var stages = [
     {
       ballots,
       losers: [],
@@ -50,12 +50,27 @@ var performInstantRunoff = (ballots, maxRunOffs) => {
     }
   ];
   for(var i=0; i<maxRunOffs; i++){
-    var lastRound = runOffs[runOffs.length - 1];
+    var lastRound = stages[stages.length - 1];
     if(!!lastRound.leaders[0] && lastRound.leaders[0].votePercentage < 50){
-      runOffs.push(runOff(lastRound));
+      stages.push(runOff(lastRound));
     }
   }
-  return runOffs;
+
+	var winner = undefined;
+  if (stages.length > 0) {
+		var finalStage = stages[stages.length - 1];
+		var finalLeader = finalStage.leaders[0];
+		if (finalLeader && finalLeader.votePercentage > 50) {
+			winner = {
+				...finalLeader,
+				fromBehind: stages[0].leaders[0].candidate !== finalLeader.candidate
+			}
+		}
+  }
+	return {
+		stages,
+		winner
+	};
 };
 
 export {performInstantRunoff};

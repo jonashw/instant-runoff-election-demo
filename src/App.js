@@ -8,44 +8,52 @@ const arrayWithoutItemAtIndex = (arr, ix) => [
   ...arr.slice(ix + 1)
 ];
 
+const applyUntil = (fn,predicate,maxTries) => {
+  var tries=0;
+  var result;
+  while(tries < maxTries) {
+    tries++;
+    console.log('try #' + tries);
+    result = fn();
+    if(predicate(result)){
+      return result;
+    }
+  } 
+  return result;
+};
+
+const QuickInfo = ({children}) =>
+  <article className="message is-info">
+    <div className="message-body">
+      <span className="icon" role="img" aria-label="info">
+        ℹ️
+      </span>
+      {children}
+    </div>
+  </article>;
+
 export default function App() {
   var availableCandidates = "🐸,🐰,🐙,🐵,🐼,🦊,🐴,🐮,🐶,🐭".split(",");
   const [candidatesAvailable, setCandidatesAvailable] = React.useState(
-    Object.fromEntries(availableCandidates.slice(0, 3).map((c) => [c, true]))
+    Object.fromEntries(availableCandidates.map((c,i) => [c, i <= 2]))
   );
   const candidates = availableCandidates.filter((c) => candidatesAvailable[c]);
   const [choiceCount, setChoiceCount] = React.useState(2);
-  const removeBallotById = (idToRemove) => {
-    let index = ballots.findIndex((b) => b.id === idToRemove);
-    if (index === -1) {
-      return;
-    }
-    setBallots(arrayWithoutItemAtIndex(ballots, index));
-    setUndos([...undos, () => setBallots(ballots)]);
-  };
-
-  const [undos, setUndos] = React.useState([]);
-  const undo = () => {
-    let undofn = undos.slice().pop();
-    if (!undofn) {
-      return;
-    }
-    undofn();
-    setUndos(undos.slice(0, -1));
-  };
-  const genBallots = () =>
-    BallotDemoData.simpleRandom(choiceCount, 200, candidates);
-  const [ballots, setBallots] = React.useState([]);
-  var results = performInstantRunoff(ballots, 10);
+  const genBallots = () => BallotDemoData.simpleRandom(choiceCount, 200, candidates);
+  const [result, setResult] = React.useState(undefined);
   const [tabId, setTabId] = React.useState(0);
 
-  React.useEffect(() => {
-    setTabId(results.length - 1);
-  }, [ballots, results.length]);
-
-  const reset = () => {
-    setBallots(genBallots());
+  const generate = () => {
+    //it's most interesting to see a candidate emerge from behind in a run-off...
+    var result = applyUntil(
+      () => performInstantRunoff(genBallots(), 10),
+      r => !!r.winner && r.winner.fromBehind,
+      20
+    );
+    setResult(result);
+    setTabId(result.stages.length - 1);
   };
+
   return (
     <div className="container is-fluid mt-5">
       <a href="https://forms.gle/4m8ih2JKVVZCKtq96" target="_blank" className="button is-info is-pulled-right">
@@ -84,22 +92,12 @@ export default function App() {
               onChange={(e) => setChoiceCount(parseInt(e.target.value, 10))}
             />
             {choiceCount}
-            {choiceCount === 1 && (
-              <div>
-                <span className="icon" role="img" aria-label="info">
-                  ℹ️
-                </span>
-                Traditional elections allow voters only a single choice. Enable
-                2 choices or more for a more interesting instant run-off
-                election.
-              </div>
-            )}
           </div>
           <div>
             <strong>Available Candidates</strong>
             <div className="is-flex">
               {availableCandidates.map((c) => (
-                <label className="checkbox has-text-centered">
+                <label key={c} className="checkbox has-text-centered">
                   <input
                     type="checkbox"
                     checked={candidatesAvailable[c]}
@@ -114,63 +112,65 @@ export default function App() {
                 </label>
               ))}
             </div>
-            {candidates.length < 3 && (
-              <div>
-                <span className="icon" role="img" aria-label="info">
-                  ℹ️
-                </span>
-                In traditional elections, it often feels like only 2 candidates
-                matter. Select at least 3 candidates for a more interesting
-                instant run-off election
-              </div>
-            )}
           </div>
 
-          <button className="button is-primary" onClick={reset}>
+          <button className="button is-primary" onClick={generate}>
             Generate random ballots
           </button>
         </div>
+        {choiceCount === 1 && (
+          <QuickInfo>
+            Traditional elections allow voters only a single choice.{" "}
+            <strong>
+              Enable 2 choices or more for a more interesting instant run-off election.
+            </strong>
+          </QuickInfo>
+        )}
+        
+        {candidates.length < 3 && (
+          <QuickInfo>
+            In traditional elections, it often feels like only 2 candidates
+            matter.{" "}
+            <strong>
+              Select at least 3 candidates for a more interesting instant run-off election
+            </strong>
+          </QuickInfo>
+        )}
       </div>
-      {results.length > 0 && (
-        <>
-          <ResultMessage results={results} />
 
-          <div class="tabs is-toggle">
+      {!!result && (
+        <>
+          <ResultMessage result={result} />
+
+          <div className="tabs is-toggle">
             <ul>
-              {results.map((r, id) => (
+              {result.stages.map((r, id) => (
                 <li className={tabId === id ? "is-active" : ""} key={id}>
                   <a onClick={() => setTabId(id)}>
                     {id === 0 ? "Original results" : `Instant Run-off #${id}`}
-                    {id === results.length - 1 ? " (Final)" : ""}
+                    {id === result.stages.length - 1 ? " (Final)" : ""}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
 
-          {[results[tabId]]
+          {[result.stages[tabId]]
             .filter((r) => !!r)
             .map((r, i) => (
               <div key={i}>
-                <p className="mb-5">
+                <div className="mb-5">
                   Ballots considered VALID at this stage = {r.ballots.length}{" "}
-                  out of {results[0].ballots.length}
-                </p>
+                  out of {result.stages[0].ballots.length}
+                </div>
                 <LeaderBoard leaders={r.leaders} />
                 {!!r.losers.length && (
-                  <p className="mb-5">
+                  <div className="mb-5">
                     Candidates eliminated from previous steps ={" "}
                     {r.losers.map(Candidate)}
-                  </p>
+                  </div>
                 )}
-                <button
-                  className="button is-text"
-                  onClick={undo}
-                  disabled={undos.length === 0}
-                >
-                  undo
-                </button>
-                <BallotGrid ballots={r.ballots} onRemove={removeBallotById} />
+                <BallotGrid ballots={r.ballots}/>
               </div>
             ))}
         </>
