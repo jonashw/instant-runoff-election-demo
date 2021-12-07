@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.js": "/instant-runoff-election-simulator/static/js/main.cbf307fb.chunk.js",
-    "main.js.map": "/instant-runoff-election-simulator/static/js/main.cbf307fb.chunk.js.map",
-    "runtime-main.js": "/instant-runoff-election-simulator/static/js/runtime-main.f527288e.js",
-    "runtime-main.js.map": "/instant-runoff-election-simulator/static/js/runtime-main.f527288e.js.map",
-    "static/js/2.eebb2c79.chunk.js": "/instant-runoff-election-simulator/static/js/2.eebb2c79.chunk.js",
-    "static/js/2.eebb2c79.chunk.js.map": "/instant-runoff-election-simulator/static/js/2.eebb2c79.chunk.js.map",
-    "index.html": "/instant-runoff-election-simulator/index.html",
-    "static/js/2.eebb2c79.chunk.js.LICENSE.txt": "/instant-runoff-election-simulator/static/js/2.eebb2c79.chunk.js.LICENSE.txt"
+    "main.js": "/ranked-choice-voting-simulator/static/js/main.cbf307fb.chunk.js",
+    "main.js.map": "/ranked-choice-voting-simulator/static/js/main.cbf307fb.chunk.js.map",
+    "runtime-main.js": "/ranked-choice-voting-simulator/static/js/runtime-main.dddf084e.js",
+    "runtime-main.js.map": "/ranked-choice-voting-simulator/static/js/runtime-main.dddf084e.js.map",
+    "static/js/2.eebb2c79.chunk.js": "/ranked-choice-voting-simulator/static/js/2.eebb2c79.chunk.js",
+    "static/js/2.eebb2c79.chunk.js.map": "/ranked-choice-voting-simulator/static/js/2.eebb2c79.chunk.js.map",
+    "index.html": "/ranked-choice-voting-simulator/index.html",
+    "static/js/2.eebb2c79.chunk.js.LICENSE.txt": "/ranked-choice-voting-simulator/static/js/2.eebb2c79.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.f527288e.js",
+    "static/js/runtime-main.dddf084e.js",
     "static/js/2.eebb2c79.chunk.js",
     "static/js/main.cbf307fb.chunk.js"
   ]
