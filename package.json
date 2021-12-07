@@ -1,5 +1,5 @@
 {
-  "name": "instant-runoff-election",
+  "name": "instant-runoff-election-simulator",
   "version": "1.0.0",
   "description": "",
   "keywords": [],
@@ -14,7 +14,7 @@
     "gh-pages": "^3.2.3",
     "typescript": "3"
   },
-  "homepage": "https://jonashw.github.io/instant-runoff-election-demo",
+  "homepage": "https://jonashw.github.io/instant-runoff-election-simulator",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
