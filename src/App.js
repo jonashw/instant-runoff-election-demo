@@ -112,8 +112,9 @@ export default function App() {
                 <span className="icon" role="img" aria-label="info">
                   ℹ️
                 </span>
-                Select at least 3 candidates for a more interesting instant
-                run-off election
+                In traditional elections, it often feels like only 2 candidates
+                matter. Select at least 3 candidates for a more interesting
+                instant run-off election
               </div>
             )}
           </div>
