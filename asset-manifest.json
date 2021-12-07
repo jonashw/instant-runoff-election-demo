@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.js": "/instant-runoff-election-demo/static/js/main.59b63faa.chunk.js",
-    "main.js.map": "/instant-runoff-election-demo/static/js/main.59b63faa.chunk.js.map",
-    "runtime-main.js": "/instant-runoff-election-demo/static/js/runtime-main.2d56aaaf.js",
-    "runtime-main.js.map": "/instant-runoff-election-demo/static/js/runtime-main.2d56aaaf.js.map",
-    "static/js/2.d0b4c377.chunk.js": "/instant-runoff-election-demo/static/js/2.d0b4c377.chunk.js",
-    "static/js/2.d0b4c377.chunk.js.map": "/instant-runoff-election-demo/static/js/2.d0b4c377.chunk.js.map",
-    "index.html": "/instant-runoff-election-demo/index.html",
-    "static/js/2.d0b4c377.chunk.js.LICENSE.txt": "/instant-runoff-election-demo/static/js/2.d0b4c377.chunk.js.LICENSE.txt"
+    "main.js": "/instant-runoff-election-simulator/static/js/main.cbf307fb.chunk.js",
+    "main.js.map": "/instant-runoff-election-simulator/static/js/main.cbf307fb.chunk.js.map",
+    "runtime-main.js": "/instant-runoff-election-simulator/static/js/runtime-main.f527288e.js",
+    "runtime-main.js.map": "/instant-runoff-election-simulator/static/js/runtime-main.f527288e.js.map",
+    "static/js/2.eebb2c79.chunk.js": "/instant-runoff-election-simulator/static/js/2.eebb2c79.chunk.js",
+    "static/js/2.eebb2c79.chunk.js.map": "/instant-runoff-election-simulator/static/js/2.eebb2c79.chunk.js.map",
+    "index.html": "/instant-runoff-election-simulator/index.html",
+    "static/js/2.eebb2c79.chunk.js.LICENSE.txt": "/instant-runoff-election-simulator/static/js/2.eebb2c79.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.2d56aaaf.js",
-    "static/js/2.d0b4c377.chunk.js",
-    "static/js/main.59b63faa.chunk.js"
+    "static/js/runtime-main.f527288e.js",
+    "static/js/2.eebb2c79.chunk.js",
+    "static/js/main.cbf307fb.chunk.js"
   ]
 }
