@@ -7,7 +7,7 @@ const BallotGrid = ({ ballots, onRemove }) => (
         <div className="box p-3">
           <div className="level">
             <div className="level-left">
-              <span className="tag">{b.id}</span>
+              <span className="tag">#{b.id}</span>
               {b.votes.map(Candidate)}
               {!!onRemove && (
                 <button

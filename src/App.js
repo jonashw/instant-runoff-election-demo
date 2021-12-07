@@ -33,22 +33,29 @@ const QuickInfo = ({children}) =>
   </article>;
 
 export default function App() {
-  var availableCandidates = "🐸,🐰,🐙,🐵,🐼,🦊,🐴,🐮,🐶,🐭".split(",");
-  const [candidatesAvailable, setCandidatesAvailable] = React.useState(
-    Object.fromEntries(availableCandidates.map((c,i) => [c, i <= 2]))
-  );
-  const candidates = availableCandidates.filter((c) => candidatesAvailable[c]);
-  const [choiceCount, setChoiceCount] = React.useState(2);
-  const genBallots = () => BallotDemoData.simpleRandom(choiceCount, 200, candidates);
+  var allCandidates = "🐸,🐰,🐙,🐵,🐼,🦊,🐴,🐮,🐶,🐭".split(",");
+  const defaultSettings = () => ({
+    candidatesInTheRunning: Object.fromEntries(allCandidates.map((c,i) => [c, i <= 2])),
+    choiceCount: 2,
+    ballotCount: 200
+  });
+  const [settings, setSettings] = React.useState(defaultSettings());
+  const candidates = allCandidates.filter((c) => settings.candidatesInTheRunning[c]);
+  const genBallots = () => BallotDemoData.simpleRandom(settings.choiceCount, settings.ballotCount, candidates);
   const [result, setResult] = React.useState(undefined);
   const [tabId, setTabId] = React.useState(0);
+
+  const reset = () => {
+    setResult(null);
+    setSettings(defaultSettings());
+  }
 
   const generate = () => {
     //it's most interesting to see a candidate emerge from behind in a run-off...
     var result = applyUntil(
       () => performInstantRunoff(genBallots(), 10),
       r => !!r.winner && r.winner.fromBehind,
-      20
+      2
     );
     setResult(result);
     setTabId(result.stages.length - 1);
@@ -59,11 +66,11 @@ export default function App() {
       <a href="https://forms.gle/4m8ih2JKVVZCKtq96" target="_blank" className="button is-info is-pulled-right">
         <span className="icon-text">
           <span className="icon mr-1">👍</span>
-          Give me feedback
+          Give feedback
           <span className="icon ml-1">👎</span>
         </span>
       </a>
-      <h1 className="title">Ranked Choice Voting</h1>
+      <h1 className="title">Ranked Choice Voting Simulator</h1>
       <div className="content">
         Experiment with this simulator to better understand Ranked Choice Voting
         (RCV) and instant run-off elections for single-winner races.{" "}
@@ -78,33 +85,34 @@ export default function App() {
           </span>
         </a>
       </div>
-      <div className="box">
+      <hr/>
+      <div>
         <div className="level">
           <div>
-            <strong># of Choices on ballot</strong>
-            <br />
-            <input
-              className="mr-2"
-              type="range"
-              min="1"
-              max="3"
-              value={choiceCount}
-              onChange={(e) => setChoiceCount(parseInt(e.target.value, 10))}
-            />
-            {choiceCount}
+            <button className="button is-primary is-large" onClick={generate}>
+              Simulate election
+            </button>
+            {!!result && <div className="has-text-centered">
+              <button className="button is-text" onClick={reset}>
+                Reset
+              </button>
+            </div>}
           </div>
           <div>
-            <strong>Available Candidates</strong>
+            <strong>Candidates in the running</strong>
             <div className="is-flex">
-              {availableCandidates.map((c) => (
+              {allCandidates.map((c) => (
                 <label key={c} className="checkbox has-text-centered">
                   <input
                     type="checkbox"
-                    checked={candidatesAvailable[c]}
+                    checked={settings.candidatesInTheRunning[c]}
                     onChange={(e) =>
-                      setCandidatesAvailable({
-                        ...candidatesAvailable,
-                        [c]: !candidatesAvailable[c]
+                      setSettings({
+                        ...settings,
+                        candidatesInTheRunning: {
+                          ...settings.candidatesInTheRunning,
+                          [c]: !settings.candidatesInTheRunning[c]
+                        }
                       })
                     }
                   />
@@ -113,12 +121,35 @@ export default function App() {
               ))}
             </div>
           </div>
-
-          <button className="button is-primary" onClick={generate}>
-            Generate random ballots
-          </button>
+          <div>
+            <strong>Number of choices on a ballot</strong>
+            <br />
+            <input
+              className="mr-2"
+              type="range"
+              min="1"
+              max="3"
+              value={settings.choiceCount}
+              onChange={(e) => setSettings({...settings, choiceCount: parseInt(e.target.value, 10)})}
+            />
+            {settings.choiceCount}
+          </div>
+          <div>
+            <strong>Number of voters to simulate</strong>
+            <br />
+            <input
+              className="mr-2"
+              type="range"
+              step="50"
+              min="50"
+              max="1000"
+              value={settings.ballotCount}
+              onChange={(e) => setSettings({...settings, ballotCount: parseInt(e.target.value, 10)})}
+            />
+            {settings.ballotCount}
+          </div>
         </div>
-        {choiceCount === 1 && (
+        {settings.choiceCount === 1 && (
           <QuickInfo>
             Traditional elections allow voters only a single choice.{" "}
             <strong>
@@ -137,6 +168,8 @@ export default function App() {
           </QuickInfo>
         )}
       </div>
+
+      <hr/>
 
       {!!result && (
         <>
@@ -166,10 +199,11 @@ export default function App() {
                 <LeaderBoard leaders={r.leaders} />
                 {!!r.losers.length && (
                   <div className="mb-5">
-                    Candidates eliminated from previous steps ={" "}
+                    Candidates eliminated in previous stages :{" "}
                     {r.losers.map(Candidate)}
                   </div>
                 )}
+                <p className="mb-5">Ballots as of this stage (with eliminated candidates removed):</p>
                 <BallotGrid ballots={r.ballots}/>
               </div>
             ))}
