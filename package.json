@@ -14,7 +14,6 @@
     "gh-pages": "^3.2.3",
     "typescript": "3"
   },
-  "homepage": "https://jonashw.github.io/ranked-choice-voting-simulator",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
