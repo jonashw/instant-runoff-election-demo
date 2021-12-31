@@ -36,12 +36,11 @@ export default function App() {
   var allCandidates = "🐸,🐰,🐙,🐵,🐼,🦊,🐴,🐮,🐶,🐭".split(",");
   const defaultSettings = () => ({
     candidatesInTheRunning: Object.fromEntries(allCandidates.map((c,i) => [c, i <= 2])),
-    choiceCount: 2,
     ballotCount: 200
   });
   const [settings, setSettings] = React.useState(defaultSettings());
   const candidates = allCandidates.filter((c) => settings.candidatesInTheRunning[c]);
-  const genBallots = () => BallotDemoData.simpleRandom(settings.choiceCount, settings.ballotCount, candidates);
+  const genBallots = () => BallotDemoData.simpleRandom(candidates.length, settings.ballotCount, candidates);
   const [result, setResult] = React.useState(undefined);
   const [tabId, setTabId] = React.useState(0);
 
@@ -122,19 +121,6 @@ export default function App() {
             </div>
           </div>
           <div>
-            <strong>Number of choices on a ballot</strong>
-            <br />
-            <input
-              className="mr-2"
-              type="range"
-              min="1"
-              max="3"
-              value={settings.choiceCount}
-              onChange={(e) => setSettings({...settings, choiceCount: parseInt(e.target.value, 10)})}
-            />
-            {settings.choiceCount}
-          </div>
-          <div>
             <strong>Number of voters to simulate</strong>
             <br />
             <input
@@ -149,14 +135,6 @@ export default function App() {
             {settings.ballotCount}
           </div>
         </div>
-        {settings.choiceCount === 1 && (
-          <QuickInfo>
-            Traditional elections allow voters only a single choice.{" "}
-            <strong>
-              Enable 2 choices or more for a more interesting instant run-off election.
-            </strong>
-          </QuickInfo>
-        )}
         
         {candidates.length < 3 && (
           <QuickInfo>
