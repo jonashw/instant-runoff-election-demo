@@ -1,12 +1,8 @@
 import React from "react";
 import BallotDemoData from "./ballot-demo-data";
 import { performInstantRunoff } from "./instant-runoff";
-import { LeaderBoard, Candidate, BallotGrid, ResultMessage } from "./ui";
-
-const arrayWithoutItemAtIndex = (arr, ix) => [
-  ...arr.slice(0, ix),
-  ...arr.slice(ix + 1)
-];
+import {  Candidate } from "./ui";
+import ElectionDisplay from "./election-display";
 
 const applyUntil = (fn,predicate,maxTries) => {
   var tries=0;
@@ -42,7 +38,6 @@ export default function App() {
   const candidates = allCandidates.filter((c) => settings.candidatesInTheRunning[c]);
   const genBallots = () => BallotDemoData.simpleRandom(candidates.length, settings.ballotCount, candidates);
   const [result, setResult] = React.useState(undefined);
-  const [tabId, setTabId] = React.useState(0);
 
   const reset = () => {
     setResult(null);
@@ -57,7 +52,6 @@ export default function App() {
       2
     );
     setResult(result);
-    setTabId(result.stages.length - 1);
   };
 
   return (
@@ -147,46 +141,7 @@ export default function App() {
         )}
       </div>
 
-
-      {!!result && (
-        <>
-          <hr/>
-          <ResultMessage result={result} />
-
-          <div className="tabs is-toggle">
-            <ul>
-              {result.stages.map((r, id) => (
-                <li className={tabId === id ? "is-active" : ""} key={id}>
-                  <a onClick={() => setTabId(id)}>
-                    {id === 0 ? "Original results" : `Instant Run-off #${id}`}
-                    {id === result.stages.length - 1 ? " (Final)" : ""}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {[result.stages[tabId]]
-            .filter((r) => !!r)
-            .map((r, i) => (
-              <div key={i}>
-                <div className="mb-5">
-                  Ballots considered VALID at this stage = {r.ballots.length}{" "}
-                  out of {result.stages[0].ballots.length}
-                </div>
-                <LeaderBoard leaders={r.leaders} />
-                {!!r.losers.length && (
-                  <div className="mb-5">
-                    Candidates eliminated in previous stages :{" "}
-                    {r.losers.map(Candidate)}
-                  </div>
-                )}
-                <p className="mb-5">Ballots as of this stage (with eliminated candidates removed):</p>
-                <BallotGrid ballots={r.ballots}/>
-              </div>
-            ))}
-        </>
-      )}
+      {!!result && ( <ElectionDisplay result={result}/>)}
     </div>
   );
 }
